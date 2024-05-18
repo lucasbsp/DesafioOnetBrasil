@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DesafioOnetBrasil.View.EditarTarefaPage"
+             xmlns:viewmodels="clr-namespace:DesafioOnetBrasil.ViewModel"
+             xmlns:models="clr-namespace:DesafioOnetBrasil.Model"
+             Title="{Binding Title}">
+
+    <Grid Margin="16"
+          VerticalOptions="FillAndExpand"
+          HorizontalOptions="FillAndExpand">
+
+        <VerticalStackLayout >
+
+        <Label Text="{Binding Tarefa.Nome, Mode=TwoWay}" />
+        
+        <Entry Text="{Binding Tarefa.Nome, Mode=TwoWay}" 
+               Placeholder="Título"/>
+        
+        <Editor Text="{Binding Tarefa.Descricao, Mode=TwoWay}" 
+                Placeholder="Descrição" 
+                HeightRequest="150" />
+
+        <Picker Title="Status da tarefa"
+                SelectedItem="{Binding Tarefa.Status, Mode=TwoWay}">
+            <Picker.Items>
+                <x:String>Incompleto</x:String>
+                <x:String>Completo</x:String>
+            </Picker.Items>
+        </Picker>
+
+    </VerticalStackLayout>
+
+        <Button HeightRequest="60"
+        WidthRequest="60" 
+        CornerRadius="60"
+        VerticalOptions="EndAndExpand"
+        HorizontalOptions="End"
+        Command="{Binding SalvarTarefaCommand}"
+        Text="{x:Static models:Icons.Check}" Style="{x:StaticResource MaterialIcon}">
+            <Button.Shadow>
+                <Shadow Brush="{StaticResource BlackBrush}"
+                Radius="15"
+                Offset="0,0"
+                Opacity="0.6"/>
+            </Button.Shadow>
+        </Button>
+
+
+    </Grid>
+</ContentPage>

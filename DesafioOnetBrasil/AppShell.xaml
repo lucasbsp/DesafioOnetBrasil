@@ -5,11 +5,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:DesafioOnetBrasil.View"
     Shell.FlyoutBehavior="Disabled"
-    Title="DesafioOnetBrasil">
+    Title="DesafioOnetBrasil"
+    Shell.TitleColor="{ StaticResource SecondaryDarkText }"
+    Shell.BackgroundColor="{StaticResource PrimaryDark}">
 
-    <ShellContent
-        Title="Lista de Tarefas"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <ShellContent Title="Lista de Tarefas"
+                  ContentTemplate="{ DataTemplate local:ListarTarefaPage }"
+                  Route="ListarTarefa" />
 
 </Shell>
