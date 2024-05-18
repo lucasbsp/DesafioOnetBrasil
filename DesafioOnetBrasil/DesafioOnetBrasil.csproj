@@ -88,6 +88,6 @@
 	  </MauiXaml>
 	</ItemGroup>
 
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionDesafioOnetBrasilHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionDesafioOnetBrasilHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionDesafioOnetBrasilHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>
