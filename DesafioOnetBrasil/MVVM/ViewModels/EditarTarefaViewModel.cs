@@ -19,6 +19,10 @@ namespace DesafioOnetBrasil.ViewModels
 
         [ObservableProperty]
         private TarefaModel _tarefa;
+
+        [ObservableProperty]
+        private bool _isEnabledExcluirTarefa;
+
         public string Title { get; private set; }
         public ICommand SalvarTarefaCommand { get; private set; }
         public ICommand ExcluirTarefaCommand { get; private set; }
@@ -42,18 +46,17 @@ namespace DesafioOnetBrasil.ViewModels
         /// <param name="query"></param>
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            // Editar Tarefa
             if (query != null && query.Count > 0)
             {
+                // Recebe o parâmetro para realizar a Edição
                 Tarefa = query["Tarefa"] as TarefaModel ?? new TarefaModel();
 
-                if (Tarefa.Id != 0)
-                {
-                    Title = Tarefa.Nome;
-                }
-                else
-                {
-                    Title = "Editar Tarefa";
-                }
+                // Title da página
+                Title = Tarefa?.Nome ?? "Editar Tarefa";
+                
+                // Habilita o botão de Excluir Tarefa
+                IsEnabledExcluirTarefa = true;
             }
         }
 
@@ -85,6 +88,8 @@ namespace DesafioOnetBrasil.ViewModels
 
                     await _tarefaService.InitializeAsync();
                     await _tarefaService.CreateTarefa(Tarefa);
+
+                    DisplaySimpleSuccessMessage("Tarefa criada com sucesso!");
                 }
                 catch (Exception e)
                 {
@@ -100,6 +105,8 @@ namespace DesafioOnetBrasil.ViewModels
                     
                     await _tarefaService.InitializeAsync();
                     await _tarefaService.UpdateTarefa(Tarefa);
+                    
+                    DisplaySimpleSuccessMessage("Tarefa atualizada com sucesso!");
                 }
                 catch (Exception e)
                 {
@@ -126,6 +133,10 @@ namespace DesafioOnetBrasil.ViewModels
                         {
                             await _tarefaService.InitializeAsync();
                             await _tarefaService.DeleteTarefa(Tarefa);
+
+                            await Shell.Current.GoToAsync("..?Refresh=true", true);
+
+                            DisplaySimpleSuccessMessage("Tarefa excluída");
                         }
                         catch (Exception e)
                         {
@@ -172,6 +183,24 @@ namespace DesafioOnetBrasil.ViewModels
                     {
                         BackgroundColor = Color.FromArgb("F9CF58"),
                         TextColor = Colors.Black
+                    }
+                );
+                snackbar.Show();
+            }
+        }
+        private void DisplaySimpleSuccessMessage(string msg)
+        {
+            if (App.Current != null && App.Current.MainPage != null)
+            {
+                var snackbar = Snackbar.Make(
+                    msg,
+                    null,
+                    string.Empty,
+                    TimeSpan.FromSeconds(2),
+                    new CommunityToolkit.Maui.Core.SnackbarOptions
+                    {
+                        BackgroundColor = Color.FromArgb("249689"),
+                        TextColor = Colors.White
                     }
                 );
                 snackbar.Show();

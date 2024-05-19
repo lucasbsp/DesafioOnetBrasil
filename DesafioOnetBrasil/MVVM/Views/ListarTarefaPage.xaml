@@ -9,90 +9,94 @@
           VerticalOptions="FillAndExpand"
           HorizontalOptions="FillAndExpand">
 
-        <Border Stroke="{StaticResource Gray200}" 
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 8"
+        <Border StrokeShape="RoundRectangle 8"
+                StrokeThickness="1.3"
                 VerticalOptions="Start">
 
-            <RefreshView RefreshColor="{StaticResource PrimaryDark }"
-                         Command="{ Binding RefreshCommand}"
-                         IsRefreshing="{Binding IsRefreshing}">
+            <Grid>
 
-                <CollectionView ItemsSource="{Binding Tarefas }">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border
-                                Margin="5"
-                                Stroke="{StaticResource Gray100}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8">
+                <Label Text="Nenhuma tarefa encontrada" 
+                       IsVisible="{Binding IsEmptyList, Mode=TwoWay}" 
+                       Style="{StaticResource LabelMedium}"
+                       HorizontalOptions="Center"
+                       Margin="0,5,0,0"/>
 
-                                <StackLayout Padding="10,5">
+                <RefreshView RefreshColor="{StaticResource PrimaryDark }"
+                             Command="{ Binding RefreshCommand}"
+                             IsRefreshing="{Binding IsRefreshing}"
+                             VerticalOptions="Start">
 
-                                    <Grid ColumnDefinitions="*,20">
+                    <CollectionView ItemsSource="{Binding Tarefas }">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    Margin="5"
+                                    StrokeShape="RoundRectangle 8">
 
-                                        <StackLayout VerticalOptions="Center">
-                                            <Label Text="{ Binding Nome }"
-                                               Style="{StaticResource LabelMedium }" />
+                                    <StackLayout Padding="10">
 
-                                            <HorizontalStackLayout Spacing="5">
-                                                <Label Text="{x:Static models:Icons.Calendar_month}"
-                                                   Style="{x:StaticResource MaterialIcon}"
-                                                   FontSize="16"
-                                                   VerticalOptions="End" />
+                                        <Grid ColumnDefinitions="*,20">
 
-                                                <Label Text="{ Binding DataCadastroFormatado }"
-                                                   Style="{StaticResource LabelSmall }"
-                                                   Margin="0,10,0,0"
-                                                   VerticalOptions="End" />
-                                            </HorizontalStackLayout>
-                                        </StackLayout>
+                                            <StackLayout VerticalOptions="Center">
+                                                <Label Text="{ Binding Nome }"
+                                                   Style="{StaticResource LabelMedium }" />
 
-                                        <Label Text="{x:Static models:Icons.Navigate_next}"
-                                           Style="{x:StaticResource MaterialIcon}"
-                                           VerticalOptions="Center"
-                                           Grid.Column="1"
-                                           FontSize="26"/>
-                                    </Grid>
+                                                <HorizontalStackLayout Spacing="5">
+                                                    <Label Text="{x:Static models:Icons.Calendar_month}"
+                                                       Style="{x:StaticResource MaterialIcon}"
+                                                       FontSize="16"
+                                                       VerticalOptions="End" />
 
-                                    <BoxView HeightRequest="1" 
-                                         BackgroundColor="{DynamicResource Gray100}" 
-                                         Margin="0,10"/>
+                                                    <Label Text="{ Binding DataCadastroFormatado }"
+                                                       Style="{StaticResource LabelSmall }"
+                                                       Margin="0,10,0,0"
+                                                       VerticalOptions="End" />
+                                                </HorizontalStackLayout>
+                                            </StackLayout>
 
-                                    <HorizontalStackLayout Spacing="5">
-                                        <Border HorizontalOptions="Start"
-                                            Stroke="{StaticResource Gray200}"
-                                            StrokeThickness="1"
-                                            StrokeShape="RoundRectangle 8">
-                                            <HorizontalStackLayout Margin="8,3">
-                                                <Label Text="Status: " Style="{StaticResource LabelSmall }" />
-                                                <Label Text="{Binding Status}" Style="{StaticResource LabelSmall}" />
-                                            </HorizontalStackLayout>
-                                        </Border>
-                                        <Border HorizontalOptions="Start"
-                                            IsVisible="False"
-                                            Stroke="{StaticResource Gray200}"
-                                            StrokeThickness="1"
-                                            StrokeShape="RoundRectangle 8">
-                                            <HorizontalStackLayout Margin="8,3">
-                                                <Label Text="Prioridade: " Style="{StaticResource LabelSmall }" />
-                                                <Label Text="{Binding Prioridade}" Style="{StaticResource LabelSmall}" />
-                                            </HorizontalStackLayout>
-                                        </Border>
-                                    </HorizontalStackLayout>
+                                            <Label Text="{x:Static models:Icons.Navigate_next}"
+                                               Style="{x:StaticResource MaterialIcon}"
+                                               VerticalOptions="Center"
+                                               Grid.Column="1"
+                                               FontSize="26"/>
+                                        </Grid>
 
-                                    <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnItemTapped" />
-                                    </StackLayout.GestureRecognizers>
-                                </StackLayout>
+                                        <BoxView HeightRequest="1" 
+                                             BackgroundColor="{DynamicResource Alternate}" 
+                                             Margin="0,10"/>
 
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Border HorizontalOptions="Start" 
+                                                    Stroke="{DynamicResource Primary30}"
+                                                    StrokeShape="RoundRectangle 8">
+                                                <HorizontalStackLayout Margin="8,3">
+                                                    <Label Text="Status: " Style="{StaticResource LabelSmall }" />
+                                                    <Label Text="{Binding Status}" Style="{StaticResource LabelSmall}" />
+                                                </HorizontalStackLayout>
+                                            </Border>
+                                            <Border HorizontalOptions="Start" 
+                                                    Stroke="{DynamicResource Primary30}"
+                                                    StrokeShape="RoundRectangle 8">
+                                                <HorizontalStackLayout Margin="8,3">
+                                                    <Label Text="Prioridade: " Style="{StaticResource LabelSmall }" />
+                                                    <Label Text="{Binding Prioridade}" Style="{StaticResource LabelSmall}" />
+                                                </HorizontalStackLayout>
+                                            </Border>
+                                        </HorizontalStackLayout>
 
-            </RefreshView>
-        
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnItemTapped" />
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </RefreshView>
+
+            </Grid>
         </Border>
 
         <Button HeightRequest="60"

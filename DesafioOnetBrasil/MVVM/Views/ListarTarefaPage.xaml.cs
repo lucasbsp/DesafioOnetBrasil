@@ -46,7 +46,7 @@ public partial class ListarTarefaPage : ContentPage
             var navigationParameter = new Dictionary<string, object> { { "Tarefa", item } };
 
             // Naveção Shell: Vai para a página de Edição
-            await Shell.Current.GoToAsync($"EditarTarefa?TarefaId={item.Id}", navigationParameter);
+            await Shell.Current.GoToAsync($"EditarTarefa", navigationParameter);
         }
     }
 }

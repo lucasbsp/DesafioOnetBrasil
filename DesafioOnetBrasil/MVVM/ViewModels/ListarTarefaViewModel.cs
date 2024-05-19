@@ -25,6 +25,9 @@ namespace DesafioOnetBrasil.ViewModels
         [ObservableProperty]
         private bool _isRefreshing;
 
+        [ObservableProperty]
+        private bool _isEmptyList;
+        
         public ICommand AdicionarTarefaCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
 
@@ -54,13 +57,21 @@ namespace DesafioOnetBrasil.ViewModels
         {
             try
             {
+                // Obtém tarefas do banco de dados
                 await _tarefaService.InitializeAsync();
                 var tarefasList = await _tarefaService.ReadTarefas();
 
+                // Popula a tela com os registros do banco de dados
                 Tarefas = new ObservableCollection<TarefaModel>();
                 foreach (var tarefa in tarefasList)
                 {
                     Tarefas.Add(tarefa);
+                }
+
+                // Confere se precisa exibir a mensagem "Nenhuma terefa encontrada"
+                if (Tarefas == null || Tarefas.Count <= 0)
+                {
+                    IsEmptyList = true;
                 }
             }
             catch (Exception e)
@@ -109,6 +120,7 @@ namespace DesafioOnetBrasil.ViewModels
             ObterListaTarefas();
             IsRefreshing = false;
         }
+        
         #endregion
 
 

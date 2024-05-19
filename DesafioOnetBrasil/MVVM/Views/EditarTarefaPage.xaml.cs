@@ -3,11 +3,8 @@ using DesafioOnetBrasil.ViewModels;
 
 namespace DesafioOnetBrasil.Views;
 
-[QueryProperty(nameof(TarefaId), "TarefaId")]
 public partial class EditarTarefaPage : ContentPage
 {
-    public int TarefaId { get; set; }
-
     /// <summary>
     /// Construtor
     /// </summary>
