@@ -1,4 +1,6 @@
-﻿namespace DesafioOnetBrasil
+﻿using DesafioOnetBrasil.Services.Interfaces;
+
+namespace DesafioOnetBrasil
 {
     public partial class App : Application
     {

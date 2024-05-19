@@ -1,4 +1,4 @@
-﻿namespace DesafioOnetBrasil.Model;
+﻿namespace DesafioOnetBrasil.Models;
 public class Icons
 {
     public const string Icon1 = "\u0030";

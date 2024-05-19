@@ -61,6 +61,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
@@ -74,19 +75,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="View\EditarTarefaPage.xaml.cs">
+	  <Compile Update="MVVM\Views\EditarTarefaPage.xaml.cs">
 	    <DependentUpon>EditarTarefaPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="View\ListarTarefaPage.xaml.cs">
+	  <Compile Update="MVVM\Views\ListarTarefaPage.xaml.cs">
 	    <DependentUpon>ListarTarefaPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <MauiXaml Update="View\EditarTarefaPage.xaml">
+	<!--<ItemGroup>
+	  <MauiXaml Update="MVVM\Views\EditarTarefaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
+	  <MauiXaml Update="MVVM\Views\ListarTarefaPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>-->
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionDesafioOnetBrasilHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionDesafioOnetBrasilHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 

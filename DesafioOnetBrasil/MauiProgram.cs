@@ -1,9 +1,10 @@
 ﻿using DesafioOnetBrasil.Services.Implementations;
 using DesafioOnetBrasil.Services.Interfaces;
-using DesafioOnetBrasil.View;
-using DesafioOnetBrasil.ViewModel;
+using DesafioOnetBrasil.Views;
+using DesafioOnetBrasil.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Maui;
 
 namespace DesafioOnetBrasil
 {
@@ -14,6 +15,7 @@ namespace DesafioOnetBrasil
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -28,13 +30,10 @@ namespace DesafioOnetBrasil
             // Registro de Serviços
             builder.Services.AddSingleton<ITarefaService, TarefaService>();
 
-            // Registro de Views
-            builder.Services.AddSingleton<ListarTarefaPage>();
-            builder.Services.AddSingleton<EditarTarefaPage>();
+            // Workaround para o Shell, pois ele não possui suporte para injeção de dependência
+            builder.Services.AddTransient<ListarTarefaPage>();
+            builder.Services.AddTransient<EditarTarefaPage>();
 
-            // Registro de ViewModels
-            builder.Services.AddSingleton<ListarTarefaViewModel>();
-            builder.Services.AddSingleton<EditarTarefaViewModel>();
 
             return builder.Build();
         }

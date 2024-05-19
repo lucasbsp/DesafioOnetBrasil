@@ -8,17 +8,20 @@
 
     <Color x:Key="Primary">#024873</Color>
     <Color x:Key="PrimaryDark">#023E73</Color>
-    <Color x:Key="PrimaryDarkText">#14181b</Color>
+    <Color x:Key="PrimaryDarkText">#14181B</Color>
     <Color x:Key="Secondary">#BF1B28</Color>
     <Color x:Key="SecondaryDarkText">#FFFFFF</Color>
     <Color x:Key="Tertiary">#D600AA</Color>
-    <Color x:Key="TertiaryDarkText">#57636c</Color>
+    <Color x:Key="TertiaryDarkText">#57636C</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>
     <Color x:Key="MidnightBlue">#190649</Color>
-    <Color x:Key="OffBlack">#1f1f1f</Color>
+    <Color x:Key="OffBlack">#1F1F1F</Color>
+    <Color x:Key="Success">#249689</Color>
+    <Color x:Key="Erro">#FF5963</Color>
+    <Color x:Key="Warning">#F9CF58</Color>
 
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>

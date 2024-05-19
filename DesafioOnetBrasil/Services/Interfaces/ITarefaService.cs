@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesafioOnetBrasil.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace DesafioOnetBrasil.Services.Interfaces
 {
     public interface ITarefaService
     {
-        Task<List<Model.TarefaModel>> GetTarefas();
+        Task InitializeAsync();
+        Task<int> CreateTarefa(TarefaModel tarefa);
+        Task<List<TarefaModel>> ReadTarefas();
+        Task<int> UpdateTarefa(TarefaModel tarefa);
+        Task<int> DeleteTarefa(TarefaModel tarefa);
     }
 }

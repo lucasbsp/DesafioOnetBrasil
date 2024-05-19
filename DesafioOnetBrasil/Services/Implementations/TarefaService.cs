@@ -1,4 +1,5 @@
-﻿using DesafioOnetBrasil.Model;
+﻿using SQLite;
+using DesafioOnetBrasil.Models;
 using DesafioOnetBrasil.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,19 +9,97 @@ using System.Threading.Tasks;
 
 namespace DesafioOnetBrasil.Services.Implementations
 {
+    /// <summary>
+    /// Classe responsável por fazer a conexão com o banco de dados, 
+    /// e realizar as operações de CRUD, referentes ao objeto Tarefa
+    /// </summary>
     public class TarefaService : ITarefaService
     {
-        public Task<List<TarefaModel>> GetTarefas()
+        #region Propriedades
+
+        /// <summary>
+        /// Objeto de conexão com o banco de dados
+        /// </summary>
+        private SQLiteAsyncConnection _dbConnection;
+
+        #endregion
+
+        #region Métodos da Interface
+
+        /// <summary>
+        /// Inicializa a conexão com o banco de dados
+        /// </summary>
+        /// <returns></returns>
+        public async Task InitializeAsync()
         {
-            var tarefas = new List<TarefaModel>
-            {
-                new TarefaModel { Id = "1", Nome = "Tarefa 1", Descricao = "Descrição 1", DataCadastro = DateTime.Now, Status = "Completo" },
-                new TarefaModel { Id = "2", Nome = "Tarefa 2", Descricao = "Descrição 2", DataCadastro = DateTime.Now, Status = "Incompleto" },
-                new TarefaModel { Id = "3", Nome = "Tarefa 3", Descricao = "Descrição 3", DataCadastro = DateTime.Now, Status = "Incompleto" },
-                new TarefaModel { Id = "4", Nome = "Tarefa 4", Descricao = "Descrição 4", DataCadastro = DateTime.Now, Status = "Completo" },
-                new TarefaModel { Id = "5", Nome = "Tarefa 5", Descricao = "Descrição 5", DataCadastro = DateTime.Now, Status = "Completo" }
-            };
-            return Task.FromResult(tarefas);
+            await SetUpDB();
         }
+
+        /// <summary>
+        /// Cria uma tarefa
+        /// </summary>
+        /// <param name="tarefa"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<int> CreateTarefa(TarefaModel tarefa)
+        {
+            return await _dbConnection.InsertAsync(tarefa);
+        }
+
+        /// <summary>
+        /// Obtém uma lista de tarefas
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<List<TarefaModel>> ReadTarefas()
+        {
+            return await _dbConnection.Table<TarefaModel>().ToListAsync();
+        }
+
+        /// <summary>
+        /// Atualiza os dados de uma tarefa
+        /// </summary>
+        /// <param name="tarefa"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<int> UpdateTarefa(TarefaModel tarefa)
+        {
+            return await _dbConnection.UpdateAsync(tarefa);
+        }
+
+        /// <summary>
+        /// Exclui uma tarefa
+        /// </summary>
+        /// <param name="tarefa"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<int> DeleteTarefa(TarefaModel tarefa)
+        {
+            return await _dbConnection.DeleteAsync(tarefa);
+        }
+
+        #endregion
+
+        #region Métodos Complementares
+
+        /// <summary>
+        /// Configura a inicialização da conexão com o banco de dados
+        /// </summary>
+        /// <returns></returns>
+        private async Task SetUpDB()
+        {
+            if (_dbConnection == null)
+            {
+                string dbPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "DesafioOnetBrasil.db3"
+                );
+
+                _dbConnection = new SQLiteAsyncConnection(dbPath);
+                await _dbConnection.CreateTableAsync<TarefaModel>();
+            }
+        }
+
+        #endregion
     }
 }

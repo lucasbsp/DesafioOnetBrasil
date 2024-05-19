@@ -1,4 +1,5 @@
-﻿using DesafioOnetBrasil.View;
+﻿using DesafioOnetBrasil.Services.Interfaces;
+using DesafioOnetBrasil.Views;
 
 namespace DesafioOnetBrasil
 {
@@ -8,7 +9,7 @@ namespace DesafioOnetBrasil
         {
             InitializeComponent();
 
-            Routing.RegisterRoute("ListarTarefa", typeof(ListarTarefaPage));
+            //Routing.RegisterRoute("ListarTarefa", typeof(ListarTarefaPage));
             Routing.RegisterRoute("EditarTarefa", typeof(EditarTarefaPage));
         }
     }
