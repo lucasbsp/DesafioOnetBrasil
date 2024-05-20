@@ -1,5 +1,17 @@
 # Desafio Onet Brasil
 
+## Sobre o Desafio
+
+Esse desafio tem como objetivo a demonstração de conhecimento técnico sobre o framework .NET MAUI, e será utilizado como parte do processo seletivo da empresa Onet Brasil para a vaga de desenvolvedor.
+
+## Sobre o Desenvolvedor / Participante do Processo Seletivo
+
+O perfil profissional do desenvolvedor pode ser encontrado no LinkedIn pelo nome "lucasbaptistadesenvolvedor", ou [clicando aqui](https://www.linkedin.com/in/lucasbaptistadesenvolvedor/).
+<br>
+O desenvolvedor ("Lucas Baptista") é o único responsável pela criação e manutenção deste repositório.
+
+## Sobre o Projeto
+
 Desenvolver um aplicativo para dispositivo móvel que contenha uma lista de tarefas simples.
 Utilize o framework MAUI (Multi-platform App UI). O aplicativo deve permitir que os usuários criem,
 visualizem, editem e excluam tarefas.
@@ -18,7 +30,7 @@ Para mais detalhes sobre este padrão, [clique aqui](https://learn.microsoft.com
 
 ### Banco de dados local
 
-O banco de dados escolhido para esse projeto foi o SQLite, por ser um banco offline, simples e com poderoso.
+O banco de dados escolhido para esse projeto foi o SQLite, por ser um banco offline, simples e poderoso.
 
 ### Aplicativo funcional e intuitivo
 
