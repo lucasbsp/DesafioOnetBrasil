@@ -20,7 +20,7 @@ namespace DesafioOnetBrasil.ViewModels
         private readonly ITarefaService _tarefaService;
 
         [ObservableProperty]
-        private ObservableCollection<TarefaModel> _tarefas;
+        private ObservableCollection<TarefaModel> _tarefas = [];
 
         [ObservableProperty]
         private bool _isRefreshing;
@@ -28,8 +28,10 @@ namespace DesafioOnetBrasil.ViewModels
         [ObservableProperty]
         private bool _isEmptyList;
         
-        public ICommand AdicionarTarefaCommand { get; private set; }
-        public ICommand RefreshCommand { get; private set; }
+        public ICommand AdicionarTarefaCommand => new Command(AdicionarTarefa);
+        public ICommand EditarTarefaCommand => new Command<TarefaModel>(EditarTarefa);
+        public ICommand RefreshCommand => new Command(Refresh);
+        public ICommand ExcluirTarefaCommand => new Command<TarefaModel>(ExcluirTarefa);
 
         #endregion
 
@@ -40,11 +42,6 @@ namespace DesafioOnetBrasil.ViewModels
         public ListarTarefaViewModel(ITarefaService tarefaService)
         {
             _tarefaService = tarefaService;
-            Tarefas = [];
-
-            AdicionarTarefaCommand = new Command(AdicionarTarefa);
-            RefreshCommand = new Command(Refresh);
-
             ObterListaTarefas();
         }
         
@@ -73,6 +70,10 @@ namespace DesafioOnetBrasil.ViewModels
                 {
                     IsEmptyList = true;
                 }
+                else
+                {
+                    IsEmptyList = false;
+                }
             }
             catch (Exception e)
             {
@@ -86,6 +87,52 @@ namespace DesafioOnetBrasil.ViewModels
         private async void AdicionarTarefa()
         {
             await Shell.Current.GoToAsync("EditarTarefa");
+        }
+
+        /// <summary>
+        /// Altera as informações de uma tarefa
+        /// </summary>
+        private async void EditarTarefa(TarefaModel tarefa)
+        {
+            // Obtém a tarefa selecionada
+            var navigationParameter = new Dictionary<string, object> { { "Tarefa", tarefa } };
+
+            // Naveção Shell: Vai para a página de Edição
+            await Shell.Current.GoToAsync($"EditarTarefa", navigationParameter);
+        }
+
+        /// <summary>
+        /// Exclui uma tarefa
+        /// </summary>
+        private async void ExcluirTarefa(TarefaModel tarefa)
+        {
+            if (tarefa != null && tarefa.Id != 0)
+            {
+                if (App.Current != null && App.Current.MainPage != null)
+                {
+                    bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir essa tarefa?", "Sim", "Não");
+                    if (confirm)
+                    {
+                        try
+                        {
+                            await _tarefaService.InitializeAsync();
+                            await _tarefaService.DeleteTarefa(tarefa);
+
+                            Refresh();
+
+                            DisplaySimpleSuccessMessage("Tarefa excluída");
+                        }
+                        catch (Exception e)
+                        {
+                            DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+                        }
+                    }
+                }
+                else
+                    DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [App.Current.MainPage] está nulo.");
+            }
+            else
+                DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [Tarefa] está nulo.");
         }
 
         /// <summary>
@@ -110,7 +157,30 @@ namespace DesafioOnetBrasil.ViewModels
                 snackbar.Show();
             }
         }
-        
+
+        /// <summary>
+        /// Exibe uma mensagem simples de sucesso no estilo Snackbar
+        /// </summary>
+        /// <param name="msg"></param>
+        private void DisplaySimpleSuccessMessage(string msg)
+        {
+            if (App.Current != null && App.Current.MainPage != null)
+            {
+                var snackbar = Snackbar.Make(
+                    msg,
+                    null,
+                    string.Empty,
+                    TimeSpan.FromSeconds(2),
+                    new CommunityToolkit.Maui.Core.SnackbarOptions
+                    {
+                        BackgroundColor = Color.FromArgb("249689"),
+                        TextColor = Colors.White
+                    }
+                );
+                snackbar.Show();
+            }
+        }
+
         /// <summary>
         /// Método chamado para a funcionalidade 'Pull To Refresh'
         /// </summary>

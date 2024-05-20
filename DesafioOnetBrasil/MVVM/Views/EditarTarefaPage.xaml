@@ -6,21 +6,6 @@
              xmlns:models="clr-namespace:DesafioOnetBrasil.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="{Binding Title}">
-
-    <!--<Shell.TitleView>
-        <Grid ColumnDefinitions="*, 50">
-            <Label Text="{Binding Title}"
-                   VerticalOptions="Center"
-                   TextColor="{StaticResource SecondaryDarkText}"
-                   FontSize="20"/>
-            <ImageButton Source="{x:Static models:Icons.Delete}" 
-                     Style="{x:StaticResource MaterialIcon }"
-                     Grid.Column="1"
-                     HeightRequest="50"
-                     WidthRequest="50"
-                     VerticalOptions="Center"/>
-        </Grid>
-    </Shell.TitleView>-->
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding ExcluirTarefaCommand}" IsEnabled="{Binding IsEnabledExcluirTarefa}">
@@ -38,12 +23,14 @@
 
         <Entry Text="{Binding Tarefa.Nome, Mode=TwoWay}" 
                x:Name="xNome"
-               Placeholder="Nome da tarefa"/>
+               Placeholder="Nome da tarefa"
+               MaxLength="100" />
         
         <Editor Text="{Binding Tarefa.Descricao, Mode=TwoWay}" 
                 x:Name="xDesc"
                 Placeholder="Descrição" 
-                HeightRequest="150" />
+                HeightRequest="150"
+                MaxLength="250"/>
 
         <Picker Title="Status da tarefa"
                 x:Name="xStatus"
