@@ -41,3 +41,4 @@ A interface foi desenvolvida para ser simples e de fácil entendimento para todo
 Essa aplicação foi desenvolvida com as seguintes configurações e ferramentas:
 - Visual Studio Community 2022 (64-bit), versão 17.9.7
 - Emulador Android 14.0 - API 34 - Processador x86_64 - Memória 1GB
+- .NET 8.0 (Long Term Support)
