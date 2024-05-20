@@ -49,7 +49,7 @@ O aplicativo é composto por duas telas:
 - Listagem de tarefas
 - Criação / edição de tarefas
 
-As telas de Crição e Edição são as mesma, e foi adotado esse modelo pois em um ambiente de produção isso resulta em uma manutenção mais rápida e eficiente ao longo prazo.
+A mesma tela é utilizada para a **Crição** e **Edição** de tarefas, e foi adotado esse modelo pois em um ambiente de produção isso resulta em uma manutenção mais rápida e eficiente ao longo prazo.
 
 ### Tela de listagem de tarefas
 
