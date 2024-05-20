@@ -20,7 +20,7 @@ visualizem, editem e excluam tarefas.
 
 ### Utilização do framework .NET MAUI
 
-Foi utilizado a versão 8.0.40 do framework .NET MAUI.
+Foi utilizada a versão 8.0.40 do framework .NET MAUI.
 
 ### Um padrão de design moderno 
 
