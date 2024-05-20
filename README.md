@@ -34,7 +34,7 @@ O banco de dados escolhido para esse projeto foi o SQLite, por ser um banco offl
 
 ### Aplicativo funcional e intuitivo
 
-A interface foi desenvolvida para ser simples e de fácil entendimento para todos os públicos, seguindo padrões de design já consolidados pelo mercado.
+A interface foi desenvolvida para ser simples e de fácil entendimento para todos os públicos, seguindo os padrões de design de aplicativos móveis já consolidados pelo mercado.
 
 ## Ambiente de Desenvolvimento
 
