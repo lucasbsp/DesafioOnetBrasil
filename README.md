@@ -72,7 +72,7 @@ O aplicativo é composto por duas telas:
 
 | Lista Preenchida	| Lista Vazia       |
 |------------------	|-----------------	|
-| ![Lista Preenchida](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/8a173501-9659-4f67-ab98-49ddc7bbd880)                 	| ![Lista Vazia](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/c1e3358f-5f27-4fff-b1b8-36764bfa3510)                	|
+| ![Lista Preenchida](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/1f34a236-a18a-406e-a052-a7213615650f)                 	| ![Lista Vazia](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/29f2ec6a-d745-4581-bfaf-1d4cab1cdf61)                	|
 
 #### Campos da tela:
 
@@ -86,7 +86,13 @@ O aplicativo é composto por duas telas:
 
 #### Ordem de exibição:
 
-As tarefas são exibidas na ordem padrão: as primeias adicionadas serão as primeiras da lista.
+As tarefas podem ser ordenadas por:
+- Data de cadastro (Padrão)
+- Data de atualização
+- Status
+- Nome
+
+Cada uma dessas opções podem ser ordenadas de forma ascendente ou descendente.
 
 ### Tela de criação / edição de tarefas
 
@@ -117,11 +123,13 @@ Ao criar ou alterar uma tarefa, o usuário recebe a confirmação de sua respect
 
 ![Campo obrigatório: Status da Tarefa](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/31077c4a-1b1a-41f2-bc87-06144ca9c5a3)
 
-
 ## Tratamento de Erros
 
 Recomenda-se sempre ter um controle dos logs de erro e um nível mínimo de auditoria dos dados. Considerando o escopo e objetivos do projeto, foi optado por não persistir os dados de erros, embora o aplicativo realize o tratamento dos dados quando há algum erro, ele exibe uma mensagem amigável, com o objetivo de informar sem causar frustações ou assustar o usuário.
 
+### Exemplo de erro amigável
+
+![Screenshot_1716269304](https://github.com/lucasbsp/DesafioOnetBrasil/assets/30881240/cbad266f-959b-4cdc-9075-898c2432ae38)
 
 ## Ambiente de Desenvolvimento
 
