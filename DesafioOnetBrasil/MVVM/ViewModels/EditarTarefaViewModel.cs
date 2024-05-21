@@ -15,6 +15,8 @@ namespace DesafioOnetBrasil.ViewModels
 {
     public partial class EditarTarefaViewModel : ObservableObject, IQueryAttributable
     {
+        #region Propriedades
+
         private readonly ITarefaService _tarefaService;
 
         [ObservableProperty]
@@ -23,9 +25,14 @@ namespace DesafioOnetBrasil.ViewModels
         [ObservableProperty]
         private bool _isEnabledExcluirTarefa;
 
+        [ObservableProperty]
+        private bool _isLoading;
+
         public string Title { get; private set; }
-        public ICommand SalvarTarefaCommand { get; private set; }
-        public ICommand ExcluirTarefaCommand { get; private set; }
+        public ICommand SalvarTarefaCommand => new Command(SalvarTarefa);
+        public ICommand ExcluirTarefaCommand => new Command(ExcluirTarefa);
+
+        #endregion
 
         /// <summary>
         /// Construtor
@@ -35,9 +42,6 @@ namespace DesafioOnetBrasil.ViewModels
             _tarefaService = tarefaService;
             Title = "Adicionar Tarefa";
             Tarefa = new TarefaModel();
-
-            SalvarTarefaCommand = new Command(SalvarTarefa);
-            ExcluirTarefaCommand = new Command(ExcluirTarefa);
         }
 
         /// <summary>
@@ -65,56 +69,70 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private async void SalvarTarefa()
         {
-            // Validações do campo [Título]
-            if (string.IsNullOrWhiteSpace(Tarefa.Nome))
+            try
             {
-                DisplaySimpleErrorMessage($"Campo obrigatório: Título");
-                return;
-            }
+                // Validações do campo [Título]
+                if (string.IsNullOrWhiteSpace(Tarefa.Nome))
+                {
+                    DisplaySimpleErrorMessage($"Campo obrigatório: Título");
+                    return;
+                }
 
-            // Validações do campo [Status]
-            else if (Tarefa.Status == null)
+                // Validações do campo [Status]
+                else if (Tarefa.Status == null)
+                {
+                    DisplaySimpleErrorMessage($"Campo obrigatório: Status da Tarefa");
+                    return;
+                }
+
+                IsLoading = true;
+
+                // Adicionar tarefa
+                if (Tarefa.Id == 0)
+                {
+                    try
+                    {
+                        Tarefa.DataCadastro = DateTime.Now;
+                        Tarefa.DataAtualizacao = DateTime.Now;
+
+                        await _tarefaService.InitializeAsync();
+                        await _tarefaService.CreateTarefa(Tarefa);
+
+                        DisplaySimpleSuccessMessage("Tarefa criada com sucesso!");
+                    }
+                    catch (Exception e)
+                    {
+                        DisplayErrorMessage($"Não foi possível adicionar a tarefa. Erro [{e.Message}].");
+                    }
+                }
+                // Editar tarefa
+                else
+                {
+                    try
+                    {
+                        Tarefa.DataAtualizacao = DateTime.Now;
+
+                        await _tarefaService.InitializeAsync();
+                        await _tarefaService.UpdateTarefa(Tarefa);
+
+                        DisplaySimpleSuccessMessage("Tarefa atualizada com sucesso!");
+                    }
+                    catch (Exception e)
+                    {
+                        DisplayErrorMessage($"Não foi possível editar a tarefa. Erro [{e.Message}].");
+                    }
+                }
+
+                await Shell.Current.GoToAsync("..?Refresh=true", true);
+            }
+            catch (Exception e)
             {
-                DisplaySimpleErrorMessage($"Campo obrigatório: Status da Tarefa");
-                return;
+                DisplayErrorMessage($"Não foi possível salvar a tarefa. Erro [{e.Message}].");
             }
-
-            // Adicionar tarefa
-            if (Tarefa.Id == 0)
+            finally
             {
-                try
-                {
-                    Tarefa.DataCadastro = DateTime.Now;
-
-                    await _tarefaService.InitializeAsync();
-                    await _tarefaService.CreateTarefa(Tarefa);
-
-                    DisplaySimpleSuccessMessage("Tarefa criada com sucesso!");
-                }
-                catch (Exception e)
-                {
-                    DisplayErrorMessage($"Não foi possível adicionar a tarefa. Erro [{e.Message}].");
-                }
+                IsLoading = false;
             }
-            // Editar tarefa
-            else
-            {
-                try
-                {
-                    Tarefa.DataCadastro = DateTime.Now;
-                    
-                    await _tarefaService.InitializeAsync();
-                    await _tarefaService.UpdateTarefa(Tarefa);
-                    
-                    DisplaySimpleSuccessMessage("Tarefa atualizada com sucesso!");
-                }
-                catch (Exception e)
-                {
-                    DisplayErrorMessage($"Não foi possível editar a tarefa. Erro [{e.Message}].");
-                }
-            }
-                
-            await Shell.Current.GoToAsync("..?Refresh=true", true);
         }
 
         /// <summary>
@@ -122,35 +140,52 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private async void ExcluirTarefa()
         {
-            if (Tarefa != null && Tarefa.Id != 0)
+            try
             {
-                if (App.Current != null && App.Current.MainPage != null)
+                if (Tarefa != null && Tarefa.Id != 0)
                 {
-                    bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir essa tarefa?", "Sim", "Não");
-                    if (confirm)
+                    if (App.Current != null && App.Current.MainPage != null)
                     {
-                        try
+                        bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir essa tarefa?", "Sim", "Não");
+                        if (confirm)
                         {
-                            await _tarefaService.InitializeAsync();
-                            await _tarefaService.DeleteTarefa(Tarefa);
+                            try
+                            {
+                                IsLoading = true;
 
-                            await Shell.Current.GoToAsync("..?Refresh=true", true);
+                                await _tarefaService.InitializeAsync();
+                                await _tarefaService.DeleteTarefa(Tarefa);
 
-                            DisplaySimpleSuccessMessage("Tarefa excluída");
-                        }
-                        catch (Exception e)
-                        {
-                            DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+                                await Shell.Current.GoToAsync("..?Refresh=true", true);
+
+                                DisplaySimpleSuccessMessage("Tarefa excluída");
+                            }
+                            catch (Exception e)
+                            {
+                                DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+                            }
                         }
                     }
+                    else
+                        DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [App.Current.MainPage] está nulo.");
                 }
                 else
-                    DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [App.Current.MainPage] está nulo.");
+                    DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [Tarefa] está nulo.");
             }
-            else
-                DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [Tarefa] está nulo.");
+            catch (Exception e)
+            {
+                DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
-
+        
+        /// <summary>
+        /// Exibe uma mensagem no estilo Snackbar
+        /// </summary>
+        /// <param name="msg"></param>
         private void DisplayErrorMessage(string msg)
         {
             if (App.Current != null && App.Current.MainPage != null)
@@ -169,7 +204,11 @@ namespace DesafioOnetBrasil.ViewModels
                 snackbar.Show();
             }
         }
-
+        
+        /// <summary>
+        /// Exibe uma mensagem simples de erro no estilo Snackbar
+        /// </summary>
+        /// <param name="msg"></param>
         private void DisplaySimpleErrorMessage(string msg)
         {
             if (App.Current != null && App.Current.MainPage != null)
@@ -188,6 +227,11 @@ namespace DesafioOnetBrasil.ViewModels
                 snackbar.Show();
             }
         }
+        
+        /// <summary>
+        /// Exibe uma mensagem simples de sucesso no estilo Snackbar
+        /// </summary>
+        /// <param name="msg"></param>
         private void DisplaySimpleSuccessMessage(string msg)
         {
             if (App.Current != null && App.Current.MainPage != null)

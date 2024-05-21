@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DesafioOnetBrasil.Models;
+using DesafioOnetBrasil.Services.Implementations;
 using DesafioOnetBrasil.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,22 @@ namespace DesafioOnetBrasil.ViewModels
 
         [ObservableProperty]
         private bool _isEmptyList;
-        
+
+        [ObservableProperty]
+        private int _orderByType;
+
+        [ObservableProperty]
+        private int _orderAscDesc;
+
+        [ObservableProperty]
+        private bool _isLoading;
+
+
         public ICommand AdicionarTarefaCommand => new Command(AdicionarTarefa);
         public ICommand EditarTarefaCommand => new Command<TarefaModel>(EditarTarefa);
         public ICommand RefreshCommand => new Command(Refresh);
         public ICommand ExcluirTarefaCommand => new Command<TarefaModel>(ExcluirTarefa);
+        public ICommand OrdenarTarefasCommand => new Command(OrdenarTarefas);
 
         #endregion
 
@@ -44,7 +56,7 @@ namespace DesafioOnetBrasil.ViewModels
             _tarefaService = tarefaService;
             ObterListaTarefas();
         }
-        
+
         #region Métodos
 
         /// <summary>
@@ -64,6 +76,8 @@ namespace DesafioOnetBrasil.ViewModels
                 {
                     Tarefas.Add(tarefa);
                 }
+
+                Tarefas = OrderBy(Tarefas);
 
                 // Confere se precisa exibir a mensagem "Nenhuma terefa encontrada"
                 if (Tarefas == null || Tarefas.Count <= 0)
@@ -86,7 +100,14 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private async void AdicionarTarefa()
         {
-            await Shell.Current.GoToAsync("EditarTarefa");
+            try
+            {
+                await Shell.Current.GoToAsync("EditarTarefa");
+            }
+            catch (Exception e)
+            {
+                DisplayErrorMessage($"Não foi possível adicionar uma nova tarefa. Erro [{e.Message}]");
+            }
         }
 
         /// <summary>
@@ -94,11 +115,18 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private async void EditarTarefa(TarefaModel tarefa)
         {
-            // Obtém a tarefa selecionada
-            var navigationParameter = new Dictionary<string, object> { { "Tarefa", tarefa } };
+            try
+            {
+                // Obtém a tarefa selecionada
+                var navigationParameter = new Dictionary<string, object> { { "Tarefa", tarefa } };
 
-            // Naveção Shell: Vai para a página de Edição
-            await Shell.Current.GoToAsync($"EditarTarefa", navigationParameter);
+                // Naveção Shell: Vai para a página de Edição
+                await Shell.Current.GoToAsync($"EditarTarefa", navigationParameter);
+            }
+            catch (Exception e)
+            {
+                DisplayErrorMessage($"Não foi possível editar esta tarefa. Erro [{e.Message}]");
+            }
         }
 
         /// <summary>
@@ -106,33 +134,46 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private async void ExcluirTarefa(TarefaModel tarefa)
         {
-            if (tarefa != null && tarefa.Id != 0)
+            try
             {
-                if (App.Current != null && App.Current.MainPage != null)
+                if (tarefa != null && tarefa.Id != 0)
                 {
-                    bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir essa tarefa?", "Sim", "Não");
-                    if (confirm)
+                    if (App.Current != null && App.Current.MainPage != null)
                     {
-                        try
+                        bool confirm = await App.Current.MainPage.DisplayAlert("Confirmação", "Deseja excluir essa tarefa?", "Sim", "Não");
+                        if (confirm)
                         {
-                            await _tarefaService.InitializeAsync();
-                            await _tarefaService.DeleteTarefa(tarefa);
+                            try
+                            {
+                                IsLoading = true;
 
-                            Refresh();
+                                await _tarefaService.InitializeAsync();
+                                await _tarefaService.DeleteTarefa(tarefa);
 
-                            DisplaySimpleSuccessMessage("Tarefa excluída");
-                        }
-                        catch (Exception e)
-                        {
-                            DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+                                Refresh();
+
+                                DisplaySimpleSuccessMessage("Tarefa excluída");
+                            }
+                            catch (Exception e)
+                            {
+                                DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}].");
+                            }
                         }
                     }
+                    else
+                        DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [App.Current.MainPage] está nulo.");
                 }
                 else
-                    DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [App.Current.MainPage] está nulo.");
+                    DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [Tarefa] está nulo.");
             }
-            else
-                DisplayErrorMessage("Não foi possível excluir a tarefa. Objeto [Tarefa] está nulo.");
+            catch (Exception e)
+            {
+                DisplayErrorMessage($"Não foi possível excluir a tarefa. Erro [{e.Message}]");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         /// <summary>
@@ -186,13 +227,172 @@ namespace DesafioOnetBrasil.ViewModels
         /// </summary>
         private void Refresh()
         {
-            IsRefreshing = true;
-            ObterListaTarefas();
-            IsRefreshing = false;
+            try
+            {
+                IsRefreshing = true;
+
+                ObterListaTarefas();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        }
+
+        /// <summary>
+        /// Evento disparado pelo usuário quando a ordenação é alterada
+        /// </summary>
+        private void OrdenarTarefas()
+        {
+            try
+            {
+                IsLoading = true;
+
+                Tarefas = OrderBy(Tarefas);   
+            }
+            catch (Exception e)
+            {
+                DisplayErrorMessage($"Não foi possível ordenar a lista de tarefas. Erro [{e.Message}]");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// Ordena os itens da lista conforme selecionado na interface do usuário
+        /// </summary>
+        /// <param name="tarefas"></param>
+        /// <returns></returns>
+        private ObservableCollection<TarefaModel> OrderByOld(ObservableCollection<TarefaModel> tarefas)
+        {
+            if (tarefas != null && tarefas.Count > 0)
+            {
+                // Ordem Ascendente
+                if (OrderAscDesc <= 0)
+                {
+                    switch (OrderByType)
+                    {
+                        // Data de cadastro
+                        case 0:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderBy(x => x.DataCadastro));
+                            break;
+
+                        // Data de atualização
+                        case 1:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderBy(x => x.DataAtualizacao));
+                            break;
+
+                        // Status
+                        case 2:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderBy(x => x.Status));
+                            break;
+
+                        // Nome
+                        case 3:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderBy(x => x.Nome));
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                // Ordem Descendente
+                else
+                {
+                    switch (OrderByType)
+                    {
+                        // Data de cadastro
+                        case 0:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.DataCadastro));
+                            break;
+
+                        // Data de atualização
+                        case 1:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.DataAtualizacao));
+                            break;
+
+                        // Status
+                        case 2:
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.Status));
+                            break;
+
+                        // Nome
+                        case 3:
+                            string c = "Nome";
+                            tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.Nome));
+                            break;
+
+                        default:
+                            break;
+                    }
+                    // TODO: Teste de reflection
+                    //tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.GetType().GetProperty(propertyName)));
+                }
+            }
+            return tarefas ?? new ObservableCollection<TarefaModel>();
         }
         
+        /// <summary>
+        /// Ordena os itens da lista conforme selecionado na interface do usuário
+        /// </summary>
+        /// <param name="tarefas"></param>
+        /// <returns></returns>
+        private ObservableCollection<TarefaModel> OrderBy(ObservableCollection<TarefaModel> tarefas)
+        {
+            if (tarefas != null && tarefas.Count > 0)
+            {
+                string propertyName = "";
+
+                switch (OrderByType)
+                {
+                    // Data de cadastro
+                    case 0:
+                        propertyName = nameof(TarefaModel.DataCadastro);
+                        break;
+
+                    // Data de atualização
+                    case 1:
+                        propertyName = nameof(TarefaModel.DataAtualizacao);
+                        break;
+
+                    // Status
+                    case 2:
+                        propertyName = nameof(TarefaModel.Status);
+                        break;
+
+                    // Nome
+                    case 3:
+                        propertyName = nameof(TarefaModel.Nome);
+                        break;
+
+                    default:
+                        propertyName = nameof(TarefaModel.Id);
+                        break;
+                }
+
+                // Ordem Ascendente
+                if (OrderAscDesc <= 0)
+                {
+                    tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderBy(x => x.GetType().GetProperty(propertyName)?.GetValue(x, null)));
+
+                }
+                // Ordem Descendente
+                else
+                {
+                    tarefas = new ObservableCollection<TarefaModel>(tarefas.OrderByDescending(x => x.GetType().GetProperty(propertyName)?.GetValue(x, null)));
+                }
+
+                // TODO: Teste de reflection
+            }
+            return tarefas ?? [];
+        }
+
         #endregion
-
-
     }
 }

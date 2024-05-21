@@ -17,31 +17,32 @@
 
     <Grid Margin="16"
           VerticalOptions="FillAndExpand"
-          HorizontalOptions="FillAndExpand">
+          HorizontalOptions="FillAndExpand"
+          InputTransparent="{Binding IsLoading, Mode=TwoWay}">
 
         <VerticalStackLayout >
 
-        <Entry Text="{Binding Tarefa.Nome, Mode=TwoWay}" 
-               x:Name="xNome"
-               Placeholder="Nome da tarefa"
-               MaxLength="100" />
+            <Entry Text="{Binding Tarefa.Nome, Mode=TwoWay}" 
+                   x:Name="xNome"
+                   Placeholder="Nome da tarefa"
+                   MaxLength="100" />
         
-        <Editor Text="{Binding Tarefa.Descricao, Mode=TwoWay}" 
-                x:Name="xDesc"
-                Placeholder="Descrição" 
-                HeightRequest="150"
-                MaxLength="250"/>
+            <Editor Text="{Binding Tarefa.Descricao, Mode=TwoWay}" 
+                    x:Name="xDesc"
+                    Placeholder="Descrição" 
+                    HeightRequest="150"
+                    MaxLength="250"/>
 
-        <Picker Title="Status da tarefa"
-                x:Name="xStatus"
-                SelectedItem="{Binding Tarefa.Status, Mode=TwoWay}">
-            <Picker.Items>
-                <x:String>Incompleto</x:String>
-                <x:String>Completo</x:String>
-            </Picker.Items>
-        </Picker>
+            <Picker Title="Status da tarefa"
+                    x:Name="xStatus"
+                    SelectedItem="{Binding Tarefa.Status, Mode=TwoWay}">
+                <Picker.Items>
+                    <x:String>Incompleto</x:String>
+                    <x:String>Completo</x:String>
+                </Picker.Items>
+            </Picker>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
 
         <Button HeightRequest="60"
                 WidthRequest="60" 
@@ -57,5 +58,16 @@
                         Opacity="0.4"/>
             </Button.Shadow>
         </Button>
+    
+        <!--Loading-->
+        <ContentView  
+             IsVisible="{Binding IsLoading, Mode=TwoWay}"
+             BackgroundColor="{DynamicResource PrimaryBackgroundColor80}"
+             VerticalOptions="FillAndExpand" 
+             HorizontalOptions="FillAndExpand">
+            <ActivityIndicator IsRunning="{Binding IsLoading, Mode=TwoWay}" 
+                       VerticalOptions="CenterAndExpand" 
+                       HorizontalOptions="CenterAndExpand"/>
+        </ContentView>
     </Grid>
 </ContentPage>

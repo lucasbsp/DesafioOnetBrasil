@@ -33,20 +33,11 @@ public partial class ListarTarefaPage : ContentPage
         }
     }
 
-    /// <summary>
-    /// Acesso para a página de Edição
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void OnItemTapped(object sender, EventArgs e)
+    private void Picker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (sender is StackLayout layout && layout.BindingContext is TarefaModel item)
+        if (_viewModel.OrdenarTarefasCommand.CanExecute(null) == true)
         {
-            // Obtém o objeto Tarefa 
-            var navigationParameter = new Dictionary<string, object> { { "Tarefa", item } };
-
-            // Naveção Shell: Vai para a página de Edição
-            await Shell.Current.GoToAsync($"EditarTarefa", navigationParameter);
+            _viewModel.OrdenarTarefasCommand.Execute(null);
         }
     }
 }

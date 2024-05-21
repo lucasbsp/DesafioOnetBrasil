@@ -14,7 +14,9 @@ namespace DesafioOnetBrasil.Models
         [MaxLength(250)]
         public string? Descricao { get; set; }
         public DateTime DataCadastro { get; set; }
+        public DateTime DataAtualizacao { get; set; }
         public string DataCadastroFormatado { get => DataCadastro.ToString("dd/MM/yyyy"); }
+        public string DataAtualizacaoFormatado { get => DataAtualizacao.ToString("dd/MM/yyyy"); }
         public string? Status { get; set; }
         public string? Prioridade { get; set; }
     }

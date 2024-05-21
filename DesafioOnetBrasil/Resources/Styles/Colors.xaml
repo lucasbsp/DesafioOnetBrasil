@@ -11,6 +11,7 @@
     <Color x:Key="Primary30">#4C023E73</Color>
     <Color x:Key="PrimaryDarkText">#14181B</Color>
     <Color x:Key="PrimaryBackgroundColor">#F1F4F8</Color>
+    <Color x:Key="PrimaryBackgroundColor80">#CCF1F4F8</Color>
     
     <Color x:Key="Secondary">#BF1B28</Color>
     <Color x:Key="Secondary30">#4DBF1B28</Color>
